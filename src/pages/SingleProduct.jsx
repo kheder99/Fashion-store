@@ -35,7 +35,7 @@ export default function SingleProduct({isOpen,notification,turnoff}) {
                 </div>
                 <div className='images-list'>
                     {products.map((prod,productIndex) => (
-                        <div key={productIndex} onClick={()=> goToSlide(productIndex)} className='images'>
+                        <div key={productIndex} onMouseEnter={()=> goToSlide(productIndex)} className='images'>
                             
                             <img src={product[0].sides_images[productIndex]} alt="Error" className={id ===productIndex ?'img active':'img'}/>
                             {console.log(prod)}

@@ -1,13 +1,14 @@
 
-import React,{useState} from 'react';
+import React,{Suspense, useState} from 'react';
 import './App.css';
-import RootLayout from './Layouts/RootLayout';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import SignUp from './pages/SignUp';
-import Verification from './pages/Verification';
-import SingleProduct from './pages/SingleProduct';
 import { createBrowserRouter, createRoutesFromElements ,Route, RouterProvider} from 'react-router-dom';
+const  RootLayout = React.lazy(()=> import('./Layouts/RootLayout'));
+const  Home = React.lazy(()=> import('./pages/Home'));
+const  Login = React.lazy(()=> import('./pages/Login'));
+const  SignUp = React.lazy(()=> import('./pages/SignUp'));
+const  Verification = React.lazy(()=> import('./pages/Verification'));
+const  SingleProduct = React.lazy(()=> import('./pages/SingleProduct'));
+
 
 
 function App() {
@@ -27,13 +28,32 @@ function App() {
   //create router 
   const router = createBrowserRouter(
     createRoutesFromElements(
-        <Route path='/' element={<RootLayout isOpen={isOpen} notification={notification} turnoff={turnoff} handleToggle={handleToggle} toggleNotification={toggleNotification}/>}>
-          <Route index element={<Home isOpen={isOpen} notification={notification} turnoff={turnoff} handleToggle={handleToggle} toggleNotification={toggleNotification}/>}/>
-          <Route path='login' element={<Login/>}/>
-          <Route path='signUp' element={<SignUp/>}/>
-          <Route path='verification' element={<Verification/>}/>
-          <Route path='product/:id' element={<SingleProduct isOpen={isOpen} notification={notification} turnoff={turnoff} />}/>
-        </Route>
+          <Route path='/' element={
+            <React.Suspense fallback={<>...</>}>
+                    <RootLayout isOpen={isOpen} notification={notification} turnoff={turnoff} handleToggle={handleToggle} toggleNotification={toggleNotification}/>
+            </React.Suspense>
+          }>
+            <Route index element={<Suspense>
+              <Home isOpen={isOpen} notification={notification} turnoff={turnoff} handleToggle={handleToggle} toggleNotification={toggleNotification}/>
+            </Suspense>}/>
+
+            <Route path='login' element={<Suspense>
+              <Login/>
+            </Suspense>}/>
+
+            <Route path='signUp' element={<Suspense>
+              <SignUp/>
+            </Suspense>}/>
+
+            <Route path='verification' element={<Suspense>
+              <Verification/>
+            </Suspense>}/>
+            
+            <Route path='product/:id' element={<React.Suspense>
+              <SingleProduct isOpen={isOpen} notification={notification} turnoff={turnoff} />
+            </React.Suspense>}/>
+          </Route>
+        
     )
   )
   return (
